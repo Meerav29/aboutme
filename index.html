@@ -48,6 +48,7 @@
         <!-- Section 1: Hero/About -->
         <section id="about" class="section text-center min-h-[60vh] flex flex-col justify-center items-center">
             <div class="max-w-3xl">
+                <div id="hero-canvas" class="absolute inset-0 -z-10"></div>
                 <h1 class="text-4xl md:text-6xl font-bold text-slate-900 mb-4 leading-tight">Meerav Shah</h1>
                 <p class="text-lg md:text-xl text-slate-600 mb-8">
                     <!-- EDIT THIS: Write a brief, engaging introduction about yourself. -->
@@ -209,6 +210,37 @@
                 mobileMenu.classList.add('hidden');
             });
         }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
+    <script>
+        const canvasContainer = document.getElementById('hero-canvas');
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        canvasContainer.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
+        const material = new THREE.MeshNormalMaterial();
+        const knot = new THREE.Mesh(geometry, material);
+        scene.add(knot);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            knot.rotation.x += 0.01;
+            knot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 
 </body>
